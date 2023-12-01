@@ -35,7 +35,7 @@ public class mainIntegradora {
                     "¡Gracias por su visita al restaurante!");
                     break;
                 default:
-                    System.out.println("Opción no válida. Inténtalo de nuevo.");
+                JOptionPane.showMessageDialog(null,"Opción no válida. Inténtalo de nuevo.");
             }
         } while (opcion != 5);
     }
@@ -49,7 +49,7 @@ public class mainIntegradora {
                 System.out.println("La mesa " + numeroMesa + " ya está ocupada.");
             }
         } else {
-            System.out.println("Número de mesa no válido.");
+            JOptionPane.showMessageDialog(null,"Número de mesa no válido.");
         }
     }
 
@@ -62,7 +62,7 @@ public class mainIntegradora {
                 System.out.println("La mesa " + numeroMesa + " no está ocupada.");
             }
         } else {
-            System.out.println("Número de mesa no válido.");
+            JOptionPane.showMessageDialog(null,"Número de mesa no válido.");
         }
     }
 
@@ -76,10 +76,10 @@ public class mainIntegradora {
                 mesas[numeroMesa - 1].totalPedidos += costoPedido;
                 System.out.println("Pedido registrado para la mesa " + numeroMesa + ".");
             } else {
-                System.out.println("La mesa " + numeroMesa + " no está ocupada. No se puede tomar pedido.");
+                JOptionPane.showMessageDialog(null, + numeroMesa + " no está ocupada. No se puede tomar pedido.");
             }
         } else {
-            System.out.println("Número de mesa no válido.");
+            JOptionPane.showMessageDialog(null,"Número de mesa no válido.");
         }
     }
 
