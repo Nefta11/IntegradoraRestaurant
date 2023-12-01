@@ -31,7 +31,8 @@ public class mainIntegradora {
                     mostrarEstadoMesas(mesas);
                     break;
                 case 5:
-                    System.out.println("¡Gracias por su visita al restaurante!");
+                JOptionPane.showMessageDialog(null,
+                    "¡Gracias por su visita al restaurante!");
                     break;
                 default:
                     System.out.println("Opción no válida. Inténtalo de nuevo.");
