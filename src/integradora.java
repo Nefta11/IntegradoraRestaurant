@@ -1,45 +1,67 @@
-public class integradora{
-    boolean[] mesasOcupadas;
+class Pedido {
+    String descripcion;
+    double costo;
 
-    // Constructor
-    public integradora(int cantidadMesas) {
-        mesasOcupadas = new boolean[cantidadMesas];
+    public Pedido(String descripcion, double costo) {
+        this.descripcion = descripcion;
+        this.costo = costo;
+    }
+}
+
+class NodoPedido {
+    Pedido pedido;
+    NodoPedido siguiente;
+
+    public NodoPedido(Pedido pedido) {
+        this.pedido = pedido;
+        this.siguiente = null;
+    }
+}
+
+class ColaPedidos {
+    NodoPedido frente;
+    NodoPedido fin;
+
+    public ColaPedidos() {
+        this.frente = null;
+        this.fin = null;
     }
 
-    // Método para asignar una mesa
-    public void asignarMesa(int numeroMesa) {
-        if (numeroMesa >= 0 && numeroMesa < mesasOcupadas.length) {
-            if (!mesasOcupadas[numeroMesa]) {
-                mesasOcupadas[numeroMesa] = true;
-                System.out.println("Mesa " + numeroMesa + " asignada correctamente.");
-            } else {
-                System.out.println("La mesa " + numeroMesa + " ya está ocupada.");
-            }
+    public void encolar(Pedido pedido) {
+        NodoPedido nuevoNodo = new NodoPedido(pedido);
+        if (frente == null) {
+            frente = nuevoNodo;
+            fin = nuevoNodo;
         } else {
-            System.out.println("Número de mesa no válido.");
+            fin.siguiente = nuevoNodo;
+            fin = nuevoNodo;
         }
     }
 
-    // Método para liberar una mesa
-    public void liberarMesa(int numeroMesa) {
-        if (numeroMesa >= 0 && numeroMesa < mesasOcupadas.length) {
-            if (mesasOcupadas[numeroMesa]) {
-                mesasOcupadas[numeroMesa] = false;
-                System.out.println("Mesa " + numeroMesa + " liberada correctamente.");
-            } else {
-                System.out.println("La mesa " + numeroMesa + " no está ocupada.");
-            }
+    public Pedido desencolar() {
+        if (frente == null) {
+            return null;
         } else {
-            System.out.println("Número de mesa no válido.");
+            Pedido pedidoDesencolado = frente.pedido;
+            frente = frente.siguiente;
+            if (frente == null) {
+                fin = null;
+            }
+            return pedidoDesencolado;
         }
     }
+}
 
-    // Método para mostrar el estado de las mesas
-    public void mostrarEstadoMesas() {
-        System.out.println("\n--- Estado de las Mesas ---");
-        for (int i = 0; i < mesasOcupadas.length; i++) {
-            System.out.println("Mesa " + i + ": " + (mesasOcupadas[i] ? "Ocupada" : "Desocupada"));
-        }
-        System.out.println("--------------------------");
+class Mesa {
+    int numero;
+    boolean ocupada;
+    ColaPedidos colaPedidos;
+    double totalPedidos;
+
+    public Mesa(int numero) {
+        this.numero = numero;
+        this.ocupada = false;
+        this.colaPedidos = new ColaPedidos();
+        this.totalPedidos = 0.0;
     }
 }
