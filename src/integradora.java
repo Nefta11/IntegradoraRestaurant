@@ -65,3 +65,4 @@ class Mesa {
         this.totalPedidos = 0.0;
     }
 }
+
