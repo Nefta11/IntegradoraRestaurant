@@ -1,7 +1,7 @@
 import javax.swing.JOptionPane;
 
 // Clase MainIntegradora
-public class MainIntegradora {
+public class mainIntegradora {
     public static void main(String[] args) {
         // Mostrar mensaje de bienvenida
         JOptionPane.showMessageDialog(null, "¡Bienvenido al Restaurante!");
@@ -16,49 +16,59 @@ public class MainIntegradora {
         // Preguntar cuántas personas quieren reservar
         int cantidadPersonas = Integer.parseInt(JOptionPane.showInputDialog(null, "¿Para cuántas personas quieres reservar?"));
 
-        // Asignar mesa
-        int mesaElegida = asignarMesaDisponible(mesas, cantidadPersonas);
+        // Preguntar cuántas mesas desea seleccionar
+        int cantidadMesasSeleccionadas = Integer.parseInt(JOptionPane.showInputDialog(null, "¿Cuántas mesas deseas seleccionar?"));
 
-        if (mesaElegida != -1) {
-            System.out.println("Mesa " + mesaElegida + " asignada correctamente para " + cantidadPersonas + " personas.");
+        // Validar que la cantidad de mesas seleccionadas sea suficiente
+        if (cantidadPersonas > 0 && cantidadMesasSeleccionadas > 0) {
+            int totalPersonasAsignadas = 0;
+            int mesasSeleccionadas = 0;
 
-            int opcion;
-            do {
-                opcion = Integer.parseInt(JOptionPane.showInputDialog(null,
-                        "Selecciona la opción que deseas ejecutar: \n1. Tomar Pedido\n2. Liberar Mesa\n3. Mostrar Estado de Mesas\n4. Salir"));
+            while (mesasSeleccionadas < cantidadMesasSeleccionadas) {
+                // Mostrar mesas disponibles
+                mostrarMesasDisponibles(mesas);
 
-                switch (opcion) {
-                    case 1:
-                        integradora.tomarPedido(mesas, mesaElegida);
-                        break;
-                    case 2:
-                        integradora.liberarMesa(mesas, mesaElegida);
-                        break;
-                    case 3:
-                        integradora.mostrarEstadoMesas(mesas);
-                        break;4
-                    case 4:
-                        System.out.println("¡Gracias por su visita al restaurante!");
-                        break;
-                    default:
-                        System.out.println("Opción no válida. Inténtalo de nuevo.");
-                }
-            } while (opcion != 4);
-        } else {
-            System.out.println("Lo siento, no hay mesas disponibles para la cantidad de personas ingresadas.");
-        }
-    }
+                // Elegir una mesa
+                int mesaElegida = Integer.parseInt(JOptionPane.showInputDialog(null, "Elige el número de una mesa disponible:"));
 
-    public static int asignarMesaDisponible(Mesa[] mesas, int cantidadPersonas) {
-        if (cantidadPersonas > 0) {
-            for (Mesa mesa : mesas) {
-                if (!mesa.ocupada && mesa.personasEnMesa + cantidadPersonas <= mesa.aforoMaximo) {
-                    mesa.ocupada = true;
-                    mesa.personasEnMesa += cantidadPersonas;
-                    return mesa.numero;
+                // Validar la elección de la mesa
+                if (mesaElegida >= 1 && mesaElegida <= cantidadMesas) {
+                    Mesa mesa = mesas[mesaElegida - 1];
+
+                    // Validar si la mesa está ocupada y tiene capacidad suficiente
+                    if (!mesa.ocupada && mesa.personasEnMesa + cantidadPersonas <= mesa.aforoMaximo) {
+                        mesa.ocupada = true;
+                        mesa.personasEnMesa += cantidadPersonas;
+                        totalPersonasAsignadas += cantidadPersonas;
+                        mesasSeleccionadas++;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "La mesa seleccionada no está disponible para la cantidad de personas ingresadas. Elige otra mesa.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Número de mesa no válido. Elige otra mesa.");
                 }
             }
+
+            System.out.println("Mesas asignadas correctamente para " + totalPersonasAsignadas + " personas.");
+
+            // Resto del código...
+            // Aquí puedes continuar con el menú y otras funcionalidades según tus necesidades.
+        } else {
+            System.out.println("Cantidad de personas o mesas no válida.");
         }
-        return -1; // Indica que no hay mesas disponibles
     }
+
+    // Método para mostrar las mesas disponibles
+    private static void mostrarMesasDisponibles(Mesa[] mesas) {
+        System.out.println("\n--- Mesas Disponibles ---");
+        for (Mesa mesa : mesas) {
+            if (!mesa.ocupada) {
+                System.out.println("Mesa " + mesa.numero + ": Aforo: " + mesa.personasEnMesa + "/" + mesa.aforoMaximo);
+            }
+        }
+        System.out.println("--------------------------");
+    }
+
+    // Resto del código...
+    // Puedes continuar con el resto del código según tus necesidades.
 }
