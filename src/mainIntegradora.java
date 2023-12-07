@@ -1,15 +1,23 @@
 import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
+import javax.swing.UIManager;
+import java.awt.Image;
 
 // Clase MainIntegradora
 public class MainIntegradora {
     public static void main(String[] args) {
         // Mostrar mensaje de bienvenida
-        String mensaje = "¡Bienvenido al Restaurante!";
-        String iconPath = "IMG/restaurante.png"; // Ruta del icono
-        ImageIcon icono = new ImageIcon(iconPath);
-        JOptionPane.showMessageDialog(null, mensaje, "Mensaje de Bienvenida", JOptionPane.INFORMATION_MESSAGE, icono);
+        UIManager UI = new UIManager();
+        UI.put("Panel.background", new java.awt.Color(200, 100, 255)); // Lila
+        UI.put("Button.background", new java.awt.Color(255, 0, 0)); // Rojo
+        UI.put("Button.foreground", new java.awt.Color(0, 0, 255)); // Azul
+        
 
+        ImageIcon iconotaco = new ImageIcon("restaurante.png");
+        Image imagen1 = iconotaco.getImage().getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
+        iconotaco = new ImageIcon(imagen1);
+        
+        JOptionPane.showMessageDialog(null, "¡Bienvenido al Restaurante!", "Mensaje de Bienvenida", JOptionPane.PLAIN_MESSAGE, iconotaco);
 
         // Preguntar cuántas personas quieren reservar
         int cantidadPersonas = Integer.parseInt(JOptionPane.showInputDialog(null, "¿Para cuántas personas quieres reservar?"));
