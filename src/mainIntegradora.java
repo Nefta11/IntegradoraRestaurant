@@ -1,7 +1,7 @@
 import javax.swing.JOptionPane;
 
 // Clase MainIntegradora
-public class mainIntegradora {
+public class MainIntegradora {
     public static void main(String[] args) {
         // Mostrar mensaje de bienvenida
         JOptionPane.showMessageDialog(null, "¡Bienvenido al Restaurante!");
@@ -16,15 +16,12 @@ public class mainIntegradora {
         // Preguntar cuántas personas quieren reservar
         int cantidadPersonas = Integer.parseInt(JOptionPane.showInputDialog(null, "¿Para cuántas personas quieres reservar?"));
 
-        // Preguntar cuántas mesas desea seleccionar
-        int cantidadMesasSeleccionadas = Integer.parseInt(JOptionPane.showInputDialog(null, "¿Cuántas mesas deseas seleccionar?"));
-
-        // Validar que la cantidad de mesas seleccionadas sea suficiente
-        if (cantidadPersonas > 0 && cantidadMesasSeleccionadas > 0) {
+        // Validar la cantidad de personas
+        if (cantidadPersonas > 0) {
             int totalPersonasAsignadas = 0;
-            int mesasSeleccionadas = 0;
 
-            while (mesasSeleccionadas < cantidadMesasSeleccionadas) {
+            // Mientras queden personas por asignar
+            while (totalPersonasAsignadas < cantidadPersonas) {
                 // Mostrar mesas disponibles
                 mostrarMesasDisponibles(mesas);
 
@@ -36,25 +33,29 @@ public class mainIntegradora {
                     Mesa mesa = mesas[mesaElegida - 1];
 
                     // Validar si la mesa está ocupada y tiene capacidad suficiente
-                    if (!mesa.ocupada && mesa.personasEnMesa + cantidadPersonas <= mesa.aforoMaximo) {
+                    if (!mesa.ocupada || mesa.personasEnMesa < mesa.aforoMaximo) {
+                        // Asignar personas a la mesa
+                        int personasAsignar = Math.min(cantidadPersonas - totalPersonasAsignadas, mesa.aforoMaximo - mesa.personasEnMesa);
+                        mesa.personasEnMesa += personasAsignar;
+                        totalPersonasAsignadas += personasAsignar;
+
+                        // Marcar la mesa como ocupada
                         mesa.ocupada = true;
-                        mesa.personasEnMesa += cantidadPersonas;
-                        totalPersonasAsignadas += cantidadPersonas;
-                        mesasSeleccionadas++;
+
+                        System.out.println("Mesa " + mesa.numero + " asignada correctamente para " + personasAsignar + " personas.");
                     } else {
-                        JOptionPane.showMessageDialog(null, "La mesa seleccionada no está disponible para la cantidad de personas ingresadas. Elige otra mesa.");
+                        JOptionPane.showMessageDialog(null, "La mesa seleccionada no está disponible. Elige otra mesa.");
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Número de mesa no válido. Elige otra mesa.");
                 }
             }
 
-            System.out.println("Mesas asignadas correctamente para " + totalPersonasAsignadas + " personas.");
+            // Mostrar menú de opciones
+            mostrarMenu(mesas);
 
-            // Resto del código...
-            // Aquí puedes continuar con el menú y otras funcionalidades según tus necesidades.
         } else {
-            System.out.println("Cantidad de personas o mesas no válida.");
+            System.out.println("Cantidad de personas no válida.");
         }
     }
 
@@ -62,13 +63,135 @@ public class mainIntegradora {
     private static void mostrarMesasDisponibles(Mesa[] mesas) {
         System.out.println("\n--- Mesas Disponibles ---");
         for (Mesa mesa : mesas) {
-            if (!mesa.ocupada) {
+            if (!mesa.ocupada || mesa.personasEnMesa < mesa.aforoMaximo) {
                 System.out.println("Mesa " + mesa.numero + ": Aforo: " + mesa.personasEnMesa + "/" + mesa.aforoMaximo);
             }
         }
         System.out.println("--------------------------");
     }
 
-    // Resto del código...
-    // Puedes continuar con el resto del código según tus necesidades.
+    // Método para mostrar el menú de opciones después de asignar mesas
+    private static void mostrarMenu(Mesa[] mesas) {
+        boolean salir = false;
+
+        while (!salir) {
+            // Mostrar opciones del menú
+            String menu = "1. Mostrar Mesas Ocupadas\n2. Realizar Pedido\n3. Pagar Cuenta\n4. Desocupar Mesa\n5. Salir";
+            int opcion = Integer.parseInt(JOptionPane.showInputDialog(null, menu));
+
+            switch (opcion) {
+                case 1:
+                    mostrarMesasOcupadas(mesas);
+                    break;
+                case 2:
+                    realizarPedido(mesas);
+                    break;
+                case 3:
+                    pagarCuenta(mesas);
+                    break;
+                case 4:
+                    desocuparMesa(mesas);
+                    break;
+                case 5:
+                    salir = true;
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(null, "Opción no válida. Introduce un número del 1 al 5.");
+            }
+        }
+    }
+
+    // Método para mostrar las mesas ocupadas
+    private static void mostrarMesasOcupadas(Mesa[] mesas) {
+        System.out.println("\n--- Mesas Ocupadas ---");
+        for (Mesa mesa : mesas) {
+            if (mesa.ocupada) {
+                System.out.println("Mesa " + mesa.numero + ": Aforo: " + mesa.personasEnMesa + "/" + mesa.aforoMaximo);
+            }
+        }
+        System.out.println("--------------------------");
+    }
+
+    // Método para realizar un pedido
+    private static void realizarPedido(Mesa[] mesas) {
+        int numeroMesa = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingresa el número de mesa para realizar el pedido:"));
+        if (validarNumeroMesa(numeroMesa, mesas)) {
+            Mesa mesa = mesas[numeroMesa - 1];
+            if (mesa.ocupada) {
+                String descripcionPedido = JOptionPane.showInputDialog(null, "Ingrese la descripción del pedido: ");
+                double costoPedido = 10.0; // Puedes cambiar esto según tus necesidades
+                Pedido pedido = new Pedido(descripcionPedido, costoPedido);
+                mesa.colaPedidos.encolar(pedido);
+                mesa.totalPedidos += costoPedido;
+                System.out.println("Pedido registrado para la mesa " + numeroMesa + ".");
+            } else {
+                JOptionPane.showMessageDialog(null, "La mesa seleccionada no está ocupada. No se puede tomar pedido.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Número de mesa no válido. Ingresa un número de mesa ocupada.");
+        }
+    }
+
+    // Método para pagar la cuenta
+    private static void pagarCuenta(Mesa[] mesas) {
+        int numeroMesa = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingresa el número de mesa para pagar la cuenta:"));
+        if (validarNumeroMesa(numeroMesa, mesas)) {
+            Mesa mesa = mesas[numeroMesa - 1];
+            if (mesa.ocupada) {
+                if (!mesa.cuentaPagada) {
+                    System.out.println("Total de la cuenta para la mesa " + numeroMesa + ": $" + mesa.totalPedidos);
+                    double montoPagado = Double.parseDouble(JOptionPane.showInputDialog(null, "Ingrese el monto a pagar:"));
+                    if (montoPagado >= mesa.totalPedidos) {
+                        mesa.cuentaPagada = true;
+                        System.out.println("Cuenta pagada correctamente para la mesa " + numeroMesa + ".");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "El monto ingresado no cubre el total de la cuenta. Pago no realizado.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "La cuenta para la mesa " + numeroMesa + " ya ha sido pagada.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "La mesa seleccionada no está ocupada. No se puede pagar la cuenta.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Número de mesa no válido. Ingresa un número de mesa ocupada.");
+        }
+    }
+
+    // Método para desocupar una mesa
+    private static void desocuparMesa(Mesa[] mesas) {
+        int numeroMesa = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingresa el número de mesa para desocupar:"));
+        if (validarNumeroMesa(numeroMesa, mesas)) {
+            liberarMesa(mesas, numeroMesa);
+            System.out.println("Mesa " + numeroMesa + " desocupada correctamente.");
+        } else {
+            JOptionPane.showMessageDialog(null, "Número de mesa no válido. Ingresa un número de mesa ocupada.");
+        }
+    }
+
+    // Método para liberar una mesa
+    private static void liberarMesa(Mesa[] mesas, int numeroMesa) {
+        if (numeroMesa >= 1 && numeroMesa <= mesas.length) {
+            Mesa mesa = mesas[numeroMesa - 1];
+            if (mesa.ocupada && mesa.cuentaPagada) {
+                mesa.ocupada = false;
+                mesa.personasEnMesa = 0;
+                mesa.colaPedidos = new ColaPedidos();
+                mesa.totalPedidos = 0.0;
+                mesa.cuentaPagada = false;
+                System.out.println("Mesa " + numeroMesa + " liberada correctamente.");
+            } else {
+                System.out.println("La mesa " + numeroMesa + " no puede ser liberada. Asegúrese de que la cuenta esté pagada.");
+            }
+        } else {
+            System.out.println("Número de mesa no válido.");
+        }
+    }
+
+    // Método para validar si el número de mesa es válido y está ocupada
+    private static boolean validarNumeroMesa(int numeroMesa, Mesa[] mesas) {
+        return (numeroMesa >= 1 && numeroMesa <= mesas.length && mesas[numeroMesa - 1].ocupada);
+    }
+
+    // ... (código anterior)
 }
