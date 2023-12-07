@@ -80,6 +80,11 @@ class Mesa {
         this.totalPedidos = 0.0;
         this.cuentaPagada = false;
     }
+    public void limpiarPedidos() {
+    this.colaPedidos = new ColaPedidos();
+    this.totalPedidos = 0.0;
+}
+
 
     // Método para agregar un pedido con cantidad y precio unitario
     public void agregarPedido(String descripcion, int cantidad, double precioUnitario) {
