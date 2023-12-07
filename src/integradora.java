@@ -1,13 +1,17 @@
-
-
 // Clase Pedido
 class Pedido {
     String descripcion;
-    double costo;
+    int cantidad;
+    double precioUnitario;
 
-    public Pedido(String descripcion, double costo) {
+    public Pedido(String descripcion, int cantidad, double precioUnitario) {
         this.descripcion = descripcion;
-        this.costo = costo;
+        this.cantidad = cantidad;
+        this.precioUnitario = precioUnitario;
+    }
+
+    public double calcularCosto() {
+        return cantidad * precioUnitario;
     }
 }
 
@@ -59,6 +63,7 @@ class ColaPedidos {
 
 // Clase Mesa
 class Mesa {
+    public static final double AFORO_MAXIMO = 0;
     int numero;
     boolean ocupada;
     int aforoMaximo = 4; // Aforo máximo de 4 personas por mesa
@@ -74,5 +79,13 @@ class Mesa {
         this.colaPedidos = new ColaPedidos();
         this.totalPedidos = 0.0;
         this.cuentaPagada = false;
+    }
+
+    // Método para agregar un pedido con cantidad y precio unitario
+    public void agregarPedido(String descripcion, int cantidad, double precioUnitario) {
+        Pedido pedido = new Pedido(descripcion, cantidad, precioUnitario);
+        colaPedidos.encolar(pedido);
+        totalPedidos += pedido.calcularCosto();
+        System.out.println("Pedido de " + descripcion + " agregado para la mesa " + numero + ".");
     }
 }
