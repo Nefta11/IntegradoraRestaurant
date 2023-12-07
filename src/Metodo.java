@@ -57,7 +57,7 @@ public class Metodo {
             Mesa mesa = mesas[numeroMesa - 1];
             if (mesa.ocupada) {
                 // Menú de productos con precios
-                String menuProductos = "1. Taco ($5)\n2. Coca-cola ($20)\n3. Sopa Fria ($45)";
+                String menuProductos = "1. Tacos ($5c/u)\n2. Coca-cola ($20)\n3. Sopa Fria ($45)\n4.Pozole ($33)\n5.Hamburguesa($55.0)\n6.Ensalada César($120)\n7.Smoothie de Frutas($85)\n8.Pizza Margarita($180.0)\n9.Café Espresso($25)";
                 int opcionProducto = Integer.parseInt(JOptionPane.showInputDialog(null, "Selecciona un producto:\n" + menuProductos));
 
                 switch (opcionProducto) {
@@ -70,6 +70,25 @@ public class Metodo {
                     case 3:
                         mesa.agregarPedido("Sopa Fria", solicitarCantidad(), 45.0);
                         break;
+                    case 4:
+                        mesa.agregarPedido("Pozole", solicitarCantidad(), 33.0);
+                        break;
+                    case 5:
+                        mesa.agregarPedido("Hamburguesa", solicitarCantidad(), 55.0);
+                        break;
+                    case 6:
+                        mesa.agregarPedido("Ensalada César", solicitarCantidad(), 120.0);
+                        break;
+                    case 7:
+                        mesa.agregarPedido("Smoothie de Frutas", solicitarCantidad(), 85.0);
+                        break;
+                    case 8:
+                        mesa.agregarPedido("Pizza Margarita", solicitarCantidad(), 180.0);
+                        break;
+                    case 9:
+                        mesa.agregarPedido("Café Espresso", solicitarCantidad(), 25.0);
+                        break;
+
                     default:
                         JOptionPane.showMessageDialog(null, "Opción no válida.");
                 }
