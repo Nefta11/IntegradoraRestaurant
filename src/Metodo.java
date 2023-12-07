@@ -106,10 +106,25 @@ public class Metodo {
             Mesa mesa = mesas[numeroMesa - 1];
             if (mesa.ocupada) {
                 if (!mesa.cuentaPagada) {
-                    System.out.println("Total de la cuenta para la mesa " + numeroMesa + ": $" + mesa.totalPedidos);
-                    double montoPagado = Double.parseDouble(JOptionPane.showInputDialog(null, "Ingrese el monto a pagar:"));
-                    if (montoPagado >= mesa.totalPedidos) {
+                    double totalCuenta = mesa.totalPedidos;
+                    
+                    // Mensaje mostrando el total de la cuenta y los productos comprados
+                    String mensaje = "Debes un total de $" + totalCuenta + " por la compra de:\n";
+                    NodoPedido actual = mesa.colaPedidos.frente;
+                    while (actual != null) {
+                        mensaje += "- " + actual.pedido.cantidad + " " + actual.pedido.descripcion + " ($" + actual.pedido.calcularCosto() + ")\n";
+                        actual = actual.siguiente;
+                    }
+                    
+                    // Solicitar al usuario que ingrese la cantidad con la que pagará
+                    double montoPagado = Double.parseDouble(JOptionPane.showInputDialog(null, mensaje + "\n¿Con cuánto deseas pagar?"));
+                    
+                    if (montoPagado >= totalCuenta) {
+                        double cambio = montoPagado - totalCuenta;
                         mesa.cuentaPagada = true;
+                        
+                        // Mostrar mensaje con el cambio y agradecimiento
+                        JOptionPane.showMessageDialog(null, "Gracias por tu compra. Tu cambio es de $" + cambio);
                         System.out.println("Cuenta pagada correctamente para la mesa " + numeroMesa + ".");
                     } else {
                         JOptionPane.showMessageDialog(null, "El monto ingresado no cubre el total de la cuenta. Pago no realizado.");
@@ -124,6 +139,7 @@ public class Metodo {
             JOptionPane.showMessageDialog(null, "Número de mesa no válido. Ingresa un número de mesa ocupada.");
         }
     }
+    
 
     public static void desocuparMesa(Mesa[] mesas) {
         int numeroMesa = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingresa el número de mesa para desocupar:"));
@@ -138,20 +154,28 @@ public class Metodo {
     public static void liberarMesa(Mesa[] mesas, int numeroMesa) {
         if (numeroMesa >= 1 && numeroMesa <= mesas.length) {
             Mesa mesa = mesas[numeroMesa - 1];
-            if (mesa.ocupada && mesa.cuentaPagada) {
-                mesa.ocupada = false;
-                mesa.personasEnMesa = 0;
-                mesa.colaPedidos = new ColaPedidos();
-                mesa.totalPedidos = 0.0;
-                mesa.cuentaPagada = false;
-                System.out.println("Mesa " + numeroMesa + " liberada correctamente.");
+            
+            if (mesa.ocupada) {
+                if (mesa.cuentaPagada) {
+                    mesa.ocupada = false;
+                    mesa.personasEnMesa = 0;
+                    mesa.colaPedidos = new ColaPedidos();
+                    mesa.totalPedidos = 0.0;
+                    mesa.cuentaPagada = false;
+                    System.out.println("Mesa " + numeroMesa + " liberada correctamente.");
+                } else {
+                    // Si la cuenta no está pagada, mostrar un mensaje indicando la deuda
+                    JOptionPane.showMessageDialog(null, "Debes un total de $" + mesa.totalPedidos + " por la compra de la mesa " + numeroMesa + ".\nNo se puede liberar la mesa hasta que la cuenta esté pagada.");
+                }
             } else {
-                System.out.println("La mesa " + numeroMesa + " no puede ser liberada. Asegúrese de que la cuenta esté pagada.");
+                System.out.println("La mesa " + numeroMesa + " no puede ser liberada. Asegúrese de que esté ocupada y la cuenta esté pagada.");
             }
         } else {
             System.out.println("Número de mesa no válido.");
         }
     }
+    
+    
 
     private static int solicitarCantidad() {
         return Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese la cantidad:"));
