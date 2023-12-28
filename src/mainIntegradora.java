@@ -14,6 +14,19 @@ public class MainIntegradora {
         
         
 
+
+
+
+
+
+
+
+
+
+
+
+
+
         ImageIcon iconotaco = new ImageIcon("restaurante.png");
         Image imagen1 = iconotaco.getImage().getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
         iconotaco = new ImageIcon(imagen1);
