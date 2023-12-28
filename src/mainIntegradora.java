@@ -13,20 +13,6 @@ public class MainIntegradora {
         UI.put("Button.foreground", new java.awt.Color(0, 0, 255)); // Azul
         
         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         ImageIcon iconotaco = new ImageIcon("restaurante.png");
         Image imagen1 = iconotaco.getImage().getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
         iconotaco = new ImageIcon(imagen1);
