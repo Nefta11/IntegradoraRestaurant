@@ -21,8 +21,6 @@ public class MainIntegradora {
 
         // Preguntar cuántas personas quieren reservar
         int cantidadPersonas = Integer.parseInt(JOptionPane.showInputDialog(null, "¿Para cuántas personas quieres reservar?"));
-
-
         
         if (cantidadPersonas > 0) {
             int cantidadMesas = 10;
